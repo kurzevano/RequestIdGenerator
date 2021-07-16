@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<style>
+    .guid {
+        width: 280px;
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Generate your request ID</title>
+</head>
+
+<body>
+    <button id="btn-gen">Generate Request ID</button>
+    <input id="input-guid" class="guid" type="text"></input>
+    <button id="btn-copy">Copy</button>
+    <button id="btn-reset">Reset</button>
+
+    <script>
+        let btnGen = document.getElementById('btn-gen');
+        let inputGuid = document.getElementById('input-guid');
+        let btnCopy = document.getElementById('btn-copy');
+        let btnReset = document.getElementById('btn-reset');
+
+        const NUMBER = 'number';
+
+        btnGen.onclick = function() {
+            let curNumber = getCurrentNumber();
+
+            console.log(curNumber);
+
+            if (!curNumber) {
+                curNumber = 0;
+            }
+
+            curNumber++;
+            console.log(curNumber);
+
+            let n = new Date();
+            let y = padStr(n.getFullYear());
+            let m = padStr(n.getMonth() + 1);
+            let d = padStr(n.getDate());
+            let h = padStr(n.getHours());
+            let min = padStr(n.getMinutes());
+            inputGuid.value = generateGuid(curNumber);
+
+            setCurrentNumber(curNumber);
+        };
+
+        btnCopy.onclick = function() {
+
+            inputGuid.focus();
+            inputGuid.select();
+
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Copying text command was ' + msg);
+            } catch (err) {
+                console.log('Oops, unable to copy');
+            }
+        };
+
+        btnReset.onclick = function() {
+            let curNumber = 1;
+            setCurrentNumber(curNumber);
+            inputGuid.value = generateGuid(curNumber);
+        };
+
+        function generateGuid(curNumber) {
+            let n = new Date();
+            let y = padStr(n.getFullYear());
+            let m = padStr(n.getMonth() + 1);
+            let d = padStr(n.getDate());
+            let h = padStr(n.getHours());
+            let min = padStr(n.getMinutes());
+
+            let len = curNumber.toString().length;
+
+            // 12 - количество символов после последнего дефиса в GUID
+            let numberOfDigits = 12;
+            let numberOfZeros = numberOfDigits - len;
+            console.log("Zeroes " + numberOfZeros);
+            return `${y}${m}${d}-${h}${min}-0000-0000-${"0".repeat(numberOfDigits - len)}${curNumber}`;
+        }
+
+        // Добавляет 0 к цифре в начале
+        function padStr(i) {
+            return (i < 10) ? "0" + i : "" + i;
+        }
+
+        function getCurrentNumber() {
+            return localStorage.getItem(NUMBER);
+        }
+
+        function setCurrentNumber(curNumber) {
+            localStorage.setItem(NUMBER, curNumber);
+        }
+    </script>
+</body>
