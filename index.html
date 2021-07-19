@@ -4,6 +4,16 @@
     .guid {
         width: 280px;
     }
+    
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    button {
+        width: 150px;
+    }
 </style>
 
 <head>
@@ -91,6 +101,11 @@
         }
 
         function getCurrentNumber() {
+            fetch('http://teamnj.ddns.net:5001/api/RequestId/GetNextNumber')
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json);
+                })
             return localStorage.getItem(NUMBER);
         }
 
